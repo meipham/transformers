@@ -20,7 +20,7 @@ import math
 import torch
 import torch.nn as nn
 import torch.utils.checkpoint
-from torch.nn import CrossEntropyLoss, MSELoss
+from torch.nn import CrossEntropyLoss, MSELoss, BCEWithLogitsLoss
 
 from ...activations import ACT2FN, gelu
 from ...file_utils import (
@@ -1164,8 +1164,8 @@ class RobertaForSequenceClassification(RobertaPreTrainedModel):
                 loss_fct = MSELoss()
                 loss = loss_fct(logits.view(-1), labels.view(-1))
             else:
-                loss_fct = CrossEntropyLoss()
-                loss = loss_fct(logits.view(-1, self.num_labels), labels.view(-1))
+                loss_fct = BCEWithLogitsLoss()
+                loss = loss_fct(logits.view(-1), labels.view(-1))
 
         if not return_dict:
             output = (logits,) + outputs[2:]
